@@ -1,0 +1,42 @@
+name: "ecom"
+
+services:
+    postgres:
+        container_name: "ecom-postgres"
+        image: "postgres:17"
+        environment:
+            POSTGRES_USER: "engineer"
+            POSTGRES_PASSWORD: "password"
+            POSTGRES_DB: "ecom_db"
+        ports:
+            - "5432:5432"
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+    redis:
+        container_name: "ecom-redis"
+        image: "redis:7"
+        ports:
+            - "6379:6379"
+        command:
+            [
+                "redis-server",
+                "--user",
+                "engineer",
+                "on",
+                ">password",
+                "~*",
+                "+@all",
+                "--user",
+                "default",
+                "off",
+            ]
+    elasticsearch:
+        container_name: "ecom-elasticsearch"
+        image: "elasticsearch:8.9.0"
+        environment:
+            - discovery.type=single-node
+            - xpack.security.enabled=false
+        ports:
+            - "9200:9200"
+volumes:
+    postgres_data:
